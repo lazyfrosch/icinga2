@@ -2,7 +2,6 @@
 os: Visual Studio 2013
 
 environment:
-  SSL_CERT_FILE: "C:\\OpenSSL\\cacert.pem"
   GENERATOR: "Visual Studio 12 2013 Win64"
   OPENSSL_DIR: "C:\\Program Files\\OpenSSL"
   BOOST_VERSION: 1.61.0
@@ -48,7 +47,6 @@ install:
       if (Test-Path C:\OpenSSL) {exit}
       Start-FileDownload "http://slproweb.com/download/Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe"
       Invoke-Expression ".\Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe /SILENT /VERYSILENT /SP- /DIR=C:\OpenSSL"
-      Start-FileDownload "https://curl.haxx.se/ca/cacert.pem" -FileName "C:\OpenSSL\cacert.pem"
   # Install Boost
   - ps: |
       if (Test-Path C:\Boost) {exit}
