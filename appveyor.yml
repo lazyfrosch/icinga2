@@ -6,8 +6,8 @@ environment:
   OPENSSL_DIR: "C:\\Program Files\\OpenSSL"
   BOOST_VERSION: 1.61.0
   BOOST_VERSIONX: 1_61_0
-  BOOST_ROOT: "C:\\Boost"
-  BOOST_LIBDIR: "C:\\Boost\\lib64-msvc-12.0"
+  BOOST_ROOT: "C:\\Boost\\boost"
+  BOOST_LIBDIR: "C:\\Boost\\boost\\lib64-msvc-12.0"
   FLEX_VERSION: 2.4.6
 
   TARGET: x86_64-pc-windows-gnu
@@ -61,7 +61,7 @@ install:
 before_build:
   - if not exist build (mkdir build)
   - cd build
-  - dir C:\Boost
+  - dir C:\Boost\boost
   - dir %BOOST_LIBDIR%
   - cmake -G "%GENERATOR%" -DCPACK_GENERATOR=WIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../inst -DBOOST_ROOT="%BOOST_ROOT%" -DOPENSSL_ROOT_DIR=%OPENSSL_DIR% -DOPENSSL_INCLUDE_DIR=%OPENSSL_DIR%/include -DOPENSSL_LIBRARIES=%OPENSSL_DIR%/lib -DBOOST_LIBRARYDIR="%BOOST_LIBDIR%" -DICINGA2_UNITY_BUILD=ON -DFLEX_EXECUTABLE=C:/FlexBison/win_flex.exe -DBISON_EXECUTABLE=C:/FlexBison/win_bison.exe ..
   - dir build/
