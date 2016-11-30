@@ -47,15 +47,13 @@ install:
   - ps: |
       if (Test-Path C:\OpenSSL) {exit}
       Start-FileDownload "http://slproweb.com/download/Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe"
-      dir
-      Write-Host Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe /SILENT /VERYSILENT /SP- /DIR="C:\OpenSSL"
-      .\Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe /SILENT /VERYSILENT /SP- /DIR="C:\OpenSSL"
+      Invoke-Expression .\Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe /SILENT /VERYSILENT /SP- /DIR="C:\OpenSSL"
       Start-FileDownload "https://curl.haxx.se/ca/cacert.pem" -FileName "C:\OpenSSL\cacert.pem"
   # Install Boost
   - ps: |
       if (Test-Path C:\Boost) {exit}
       Start-FileDownload "http://downloads.sourceforge.net/project/boost/boost-binaries/${env:BOOST_VERSION}/boost_${env:BOOST_VERSIONX}-msvc-12.0-${env:BITS}.exe"
-      .\boost_${env:BOOST_VERSIONX}-msvc-12.0-${env:BITS}.exe /SILENT /DIR="C:\Boost"
+      Invoke-Expression .\boost_${env:BOOST_VERSIONX}-msvc-12.0-${env:BITS}.exe /SILENT /DIR="C:\Boost"
   # Install Flex
   - ps: |
       if (Test-Path C:\FlexBison) {exit}
