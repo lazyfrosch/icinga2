@@ -1,0 +1,53 @@
+---
+os: Visual Studio 2013
+
+environment:
+  SSL_CERT_FILE: "C:\\OpenSSL\\cacert.pem"
+  GENERATOR: "Visual Studio 12 2013 Win64"
+  OPENSSL_DIR: "C:\\OpenSSL"
+  BOOST_ROOT: "C:\\Boost_1_61_0"
+  BOOST_LIBDIR: "C:\\Boost_1_61_0\\lib64-msvc-12.0"
+
+  TARGET: x86_64-pc-windows-gnu
+  BITS: 64
+  MSYS2: 1
+  OPENSSL_VERSION: 1_0_2j
+
+  #matrix:
+    # 1.1.0, 64/32 bit
+    #- TARGET: i686-pc-windows-gnu
+    #  BITS: 32
+    #  MSYS2: 1
+    #  OPENSSL_VERSION: 1_1_0c
+    #- TARGET: x86_64-pc-windows-msvc
+    #  BITS: 64
+    #  OPENSSL_VERSION: 1_1_0c
+    #  OPENSSL_DIR: C:\OpenSSL
+
+    # 1.0.2, 64/32 bit
+    #- TARGET: x86_64-pc-windows-gnu
+    #  BITS: 64
+    #  MSYS2: 1
+    #  OPENSSL_VERSION: 1_0_2j
+    #- TARGET: i686-pc-windows-msvc
+    #  BITS: 32
+    #  OPENSSL_VERSION: 1_0_2j
+    #  OPENSSL_DIR: C:\OpenSSL
+
+install:
+  # install OpenSSL
+  #- ps: Start-FileDownload "http://slproweb.com/download/Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe"
+  #- Win%BITS%OpenSSL-%OPENSSL_VERSION%.exe /SILENT /VERYSILENT /SP- /DIR="C:\OpenSSL"
+  #- ps: Start-FileDownload "https://curl.haxx.se/ca/cacert.pem" -FileName "C:\OpenSSL\cacert.pem"
+  - choco install openssl.light
+  - choco install boost-msvc-12
+  - choco install winflexbison
+
+before_build:
+  - if not exist build (mkdir build)
+  - cd build
+  - cmake -G "%GENERATOR%" -DCPACK_GENERATOR=WIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../inst -DBOOST_ROOT="%BOOST_ROOT%" -DOPENSSL_ROOT_DIR=%OPENSSL_DIR% -DOPENSSL_INCLUDE_DIR=%OPENSSL_DIR%/include -DOPENSSL_LIBRARIES=%OPENSSL_DIR%/lib -DBOOST_LIBRARYDIR="%BOOST_LIBDIR%" -DICINGA2_UNITY_BUILD=ON ..
+
+# "-DFLEX_EXECUTABLE=C:/local/win_flex_bison/win_flex.exe" "-DBISON_EXECUTABLE=C:/local/win_flex_bison/win_bison.exe"
+# -DICINGA2_WITH_STUDIO=ON -DwxWidgets_ROOT_DIR=c:/local/wxWidgets-3.1.0 -DwxWidgets_LIB_DIR=C:/local/wxWidgets-3.1.0/lib/%wxwidgets_libdir%
+# "-DPostgreSQL_ROOT=%postgres_dir%"
