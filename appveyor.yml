@@ -42,7 +42,7 @@ cache:
 
 install:
   # install OpenSSL
-  - ps: if (Test-Path C:\OpenSSL) {exit}; Start-FileDownload "http://slproweb.com/download/Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe"; .\Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe /SILENT /VERYSILENT /SP- /DIR="C:\OpenSSL"
+  - ps: if (Test-Path C:\OpenSSL) {exit}; Start-FileDownload "http://slproweb.com/download/Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe"; Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe /SILENT /VERYSILENT /SP- /DIR="C:\OpenSSL"
   - ps: Start-FileDownload "https://curl.haxx.se/ca/cacert.pem" -FileName "C:\OpenSSL\cacert.pem"
   - ps: Start-FileDownload "http://downloads.sourceforge.net/project/boost/boost-binaries/${env:BOOST_VERSION}/boost_${env:BOOST_VERSIONX}-msvc-12.0-${env:BITS}.exe"
   - boost_%BOOST_VERSIONX%-msvc-12.0-%BITS%.exe /SILENT /DIR="C:\Boost"
