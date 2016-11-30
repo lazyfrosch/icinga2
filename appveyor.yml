@@ -4,9 +4,11 @@ os: Visual Studio 2013
 environment:
   SSL_CERT_FILE: "C:\\OpenSSL\\cacert.pem"
   GENERATOR: "Visual Studio 12 2013 Win64"
-  OPENSSL_DIR: "C:\\OpenSSL"
-  BOOST_ROOT: "C:\\Boost_1_61_0"
-  BOOST_LIBDIR: "C:\\Boost_1_61_0\\lib64-msvc-12.0"
+  OPENSSL_DIR: "C:\\Program Files\\OpenSSL"
+  BOOST_VERSION: 1_61_0
+  BOOST_ROOT: "C:\\Boost"
+  BOOST_LIBDIR: "C:\\Boost\\lib64-msvc-12.0"
+  FLEX_VERSION: 2.4.6
 
   TARGET: x86_64-pc-windows-gnu
   BITS: 64
@@ -36,18 +38,18 @@ environment:
 
 install:
   # install OpenSSL
-  #- ps: Start-FileDownload "http://slproweb.com/download/Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe"
-  #- Win%BITS%OpenSSL-%OPENSSL_VERSION%.exe /SILENT /VERYSILENT /SP- /DIR="C:\OpenSSL"
-  #- ps: Start-FileDownload "https://curl.haxx.se/ca/cacert.pem" -FileName "C:\OpenSSL\cacert.pem"
-  - choco install openssl.light
-  - choco install boost-msvc-12
-  - choco install winflexbison
+  - ps: Start-FileDownload "http://slproweb.com/download/Win${env:BITS}OpenSSL-${env:OPENSSL_VERSION}.exe"
+  - Win%BITS%OpenSSL-%OPENSSL_VERSION%.exe /SILENT /VERYSILENT /SP- /DIR="C:\OpenSSL"
+  - ps: Start-FileDownload "https://curl.haxx.se/ca/cacert.pem" -FileName "C:\OpenSSL\cacert.pem"
+  - ps: Start-FileDownload "https://sourceforge.net/projects/boost/files/boost-binaries/%BOOST_VERSION%/boost_%BOOST_VERSION%-msvc-12.0-%BITS%.exe"
+  - boost_%BOOST_VERSION%-msvc-12.0-%BITS%.exe /SILENT /DIR="C:\Boost"
+  - ps: Start-FileDownload "https://sourceforge.net/projects/winflexbison/files/win_flex_bison-%FLEX_VERSION%.zip"
+  - ps: Expand-Archive win_flex_bison-%FLEX_VERSION%.zip -OutputPath "C:\FlexBison"
 
 before_build:
   - if not exist build (mkdir build)
   - cd build
-  - cmake -G "%GENERATOR%" -DCPACK_GENERATOR=WIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../inst -DBOOST_ROOT="%BOOST_ROOT%" -DOPENSSL_ROOT_DIR=%OPENSSL_DIR% -DOPENSSL_INCLUDE_DIR=%OPENSSL_DIR%/include -DOPENSSL_LIBRARIES=%OPENSSL_DIR%/lib -DBOOST_LIBRARYDIR="%BOOST_LIBDIR%" -DICINGA2_UNITY_BUILD=ON ..
+  - cmake -G "%GENERATOR%" -DCPACK_GENERATOR=WIX -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../inst -DBOOST_ROOT="%BOOST_ROOT%" -DOPENSSL_ROOT_DIR=%OPENSSL_DIR% -DOPENSSL_INCLUDE_DIR=%OPENSSL_DIR%/include -DOPENSSL_LIBRARIES=%OPENSSL_DIR%/lib -DBOOST_LIBRARYDIR="%BOOST_LIBDIR%" -DICINGA2_UNITY_BUILD=ON -DFLEX_EXECUTABLE=C:/FlexBison/win_flex.exe -DBISON_EXECUTABLE=C:/FlexBison/win_bison.exe ..
 
-# "-DFLEX_EXECUTABLE=C:/local/win_flex_bison/win_flex.exe" "-DBISON_EXECUTABLE=C:/local/win_flex_bison/win_bison.exe"
 # -DICINGA2_WITH_STUDIO=ON -DwxWidgets_ROOT_DIR=c:/local/wxWidgets-3.1.0 -DwxWidgets_LIB_DIR=C:/local/wxWidgets-3.1.0/lib/%wxwidgets_libdir%
 # "-DPostgreSQL_ROOT=%postgres_dir%"
